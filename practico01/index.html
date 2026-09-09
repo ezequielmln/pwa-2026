@@ -8,14 +8,32 @@
 </head>
 <body>
     <div id="app">
+    <!-- Paso #2 - Información de Perfil Simple (Interpolación) -->
         <p> Hola, mi nombre es {{ nombre }}, tengo {{ edad }} años y vivo en {{ ciudad }}</p>
 
         <hr>
-
+    <!-- Paso #3 – Contador Interactivo (Interpolación y Eventos)
+ -->
         <p>Contador: {{ contador }}</p>
         <button @click="contador++">Incrementar</button>
         <button @click="contador--">Decrementar</button>
 
+        <hr>
+
+    <!-- Paso #4 – Lista de Tareas con Conteo y Estado
+    (Propiedades Computadas, Interpolación, Eventos) -->
+
+        <ul>
+            <li v-for="tarea in tareas" :key="tarea.id" :class="{'tachado' : tarea.completada}"><input type="checkbox" v-model="tarea.completada">
+                Tarea: {{ tarea.texto}} -
+                Completada: {{ tarea.completada }}
+            </li>
+        </ul>
+        <input type="text" v-model="nuevaTarea" placeholder="Agrega una nueva tarea">
+        <button @click="agregarTarea">Añadir tarea</button>
+
+        <p> Total de Tareas: {{ totalTareas }}</p>
+        <p> Tareas Pendientes: {{ tareasPendientes }}</p>
     </div>
 </body>
 <script>
@@ -25,8 +43,42 @@
             nombre: 'Ana Garcia',
             edad : 30,
             ciudad : 'Tupungato',
-            contador : 0
+            contador : 0,
+            nuevaTarea : '',
+            tareas : [
+                { id : 1, texto: 'Aprender Vue', completada: false },
+                { id : 2, texto: 'Termianr el tp1', completada: false}
+            ]
+        },
+        methods: {
+            agregarTarea(){
+                this.tareas.push({
+                    id: this.tareas.length +1,
+                    texto: this.nuevaTarea,
+                    completada: false
+                    
+                })
+                this.nuevaTarea = ''
+            }
+        },
+        computed: {
+            tareasPendientes(){
+                let pendiente = 0
+                for ( tarea of this.tareas){
+                    if (!tarea.completada) {
+                        pendiente +=1}
+                }
+                return pendiente
+            },
+            totalTareas(){
+                return this.tareas.length 
+            }
         }
     });
 </script>
+<style>
+    .tachado{
+        text-decoration: line-through;
+    }
+</style>
 </html>
