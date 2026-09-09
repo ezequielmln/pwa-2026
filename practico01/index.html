@@ -10,6 +10,12 @@
     <div id="app">
         <p> Hola, mi nombre es {{ nombre }}, tengo {{ edad }} años y vivo en {{ ciudad }}</p>
 
+        <hr>
+
+        <p>Contador: {{ contador }}</p>
+        <button @click="contador++">Incrementar</button>
+        <button @click="contador--">Decrementar</button>
+
     </div>
 </body>
 <script>
@@ -18,7 +24,8 @@
         data: {
             nombre: 'Ana Garcia',
             edad : 30,
-            ciudad : 'Tupungato'
+            ciudad : 'Tupungato',
+            contador : 0
         }
     });
 </script>
