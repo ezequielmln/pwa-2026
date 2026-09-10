@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trabajo Práctico 1</title>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.13.2/dist/axios.min.js"></script>
 </head>
 <body>
     <div id="app">
@@ -47,6 +48,11 @@
 
     <button @click="destruirApp"> Destruir app</button>
 
+    <hr>
+
+
+
+
     </div>
 </body>
 <script>
@@ -68,6 +74,8 @@
             ],
             listaEventos : [
             ]
+
+
         },
         methods: {
             agregarTarea(){
@@ -83,7 +91,6 @@
                 this.$destroy()
             },
             formatearFecha(timestamp){
-                // no lo hice yo 
                 const fecha = new Date(timestamp)
                 const fechaHora = fecha.toLocaleString('es-AR', {
                     day: '2-digit',
@@ -97,6 +104,26 @@
                 const ms = fecha.getMilliseconds().toString().padStart(3, '0')
                 return `${fechaHora}.${ms}`
         },
+        obtenerPost(postId){
+            return axios.get(`https://jsonplaceholder.typicode.com/posts/${this.postId}`)
+            .then(response => {
+                return response.data
+            })
+            .catch(error => { 
+                console.error(error)
+                return null 
+            });
+        },
+        obtenerComments(postId){
+            return axios.get(`https://jsonplaceholder.typicode.com/posts/${postId}/comments`)
+            .then(response => {
+                return response.data
+            })
+            .catch(error => { 
+                console.error(error)
+                return null 
+            });
+        }
         },
         computed: {
             tareasPendientes(){
