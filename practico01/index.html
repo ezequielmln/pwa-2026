@@ -50,8 +50,16 @@
 
     <hr>
 
-
-
+    <ul>
+        <li v-for="post in listaPost" @click="verComments(post.id)">
+            title : {{ post.title }}
+        </li>
+    </ul>
+    <ul>
+        <li v-for="comentario in listaComentarios">
+            {{ comentario.body }}
+        </li>
+    </ul>
 
     </div>
 </body>
@@ -72,10 +80,9 @@
                 { id : 1, texto: 'Aprender Vue', completada: false },
                 { id : 2, texto: 'Termianr el tp1', completada: false}
             ],
-            listaEventos : [
-            ]
-
-
+            listaEventos : [],
+            listaPost: [],
+            listaComentarios: []
         },
         methods: {
             agregarTarea(){
@@ -105,7 +112,7 @@
                 return `${fechaHora}.${ms}`
         },
         obtenerPost(postId){
-            return axios.get(`https://jsonplaceholder.typicode.com/posts/${this.postId}`)
+            return axios.get(`https://jsonplaceholder.typicode.com/posts/${postId}`)
             .then(response => {
                 return response.data
             })
@@ -123,6 +130,11 @@
                 console.error(error)
                 return null 
             });
+        },
+        verComments(postId){
+            this.obtenerComments(postId).then(comentarios => {
+                this.listaComentarios = comentarios
+            })
         }
         },
         computed: {
@@ -160,6 +172,12 @@
             this.listaEventos.push({
                 id : this.listaEventos.length +1, nombre : 'mounted', timestamp : Date.now()
             })
+            for (let i = 1; i <=10; i++){
+                this.obtenerPost(i).then(post => {
+                    this.listaPost.push(post)
+                })
+            }
+            console.log(this.listaPost)
         },
         beforeUpdate(){
             if (!doneBeforeUpdate){
