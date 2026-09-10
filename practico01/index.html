@@ -34,9 +34,26 @@
 
         <p> Total de Tareas: {{ totalTareas }}</p>
         <p> Tareas Pendientes: {{ tareasPendientes }}</p>
+
+        <hr> 
+
+    <!-- Paso #5 – Lista de eventos -->
+
+    <ul>
+        <li v-for="evento in listaEventos" :key="evento.id">
+            id: {{ evento.id}} - Nombre: {{ evento.nombre }} - TimeStamp : {{ formatearFecha(evento.timestamp) }}
+        </li>
+    </ul>
+
+    <button @click="destruirApp"> Destruir app</button>
+
     </div>
 </body>
 <script>
+    let eventosTemporales = []
+    let doneBeforeUpdate = false
+    let doneUpdated = false
+
     const app = new Vue({
         el: '#app',
         data: {
@@ -48,6 +65,8 @@
             tareas : [
                 { id : 1, texto: 'Aprender Vue', completada: false },
                 { id : 2, texto: 'Termianr el tp1', completada: false}
+            ],
+            listaEventos : [
             ]
         },
         methods: {
@@ -59,7 +78,25 @@
                     
                 })
                 this.nuevaTarea = ''
-            }
+            },
+            destruirApp(){
+                this.$destroy()
+            },
+            formatearFecha(timestamp){
+                // no lo hice yo 
+                const fecha = new Date(timestamp)
+                const fechaHora = fecha.toLocaleString('es-AR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false
+        })
+                const ms = fecha.getMilliseconds().toString().padStart(3, '0')
+                return `${fechaHora}.${ms}`
+        },
         },
         computed: {
             tareasPendientes(){
@@ -73,6 +110,58 @@
             totalTareas(){
                 return this.tareas.length 
             }
+        },
+        beforeCreate(){
+            eventosTemporales.push({
+                id : eventosTemporales.length +1, nombre : 'beforeCreate', timestamp : Date.now()
+            })
+            console.log('beforeCreate')
+        },
+        created(){
+            this.listaEventos.push(...eventosTemporales)
+            this.listaEventos.push({
+                id : eventosTemporales.length +1, nombre : 'created', timestamp : Date.now()
+            })
+            console.log('created')
+        },
+        beforeMount(){
+            this.listaEventos.push({
+                id : this.listaEventos.length +1, nombre : 'beforeMount', timestamp : Date.now()
+            })
+        },
+        mounted(){
+            this.listaEventos.push({
+                id : this.listaEventos.length +1, nombre : 'mounted', timestamp : Date.now()
+            })
+        },
+        beforeUpdate(){
+            if (!doneBeforeUpdate){
+                this.listaEventos.push({
+                    id : this.listaEventos.length +1, nombre : 'beforeUpdate', timestamp : Date.now()
+            })
+            doneBeforeUpdate = true
+            }
+
+        },
+        updated(){
+            if (!doneUpdated){
+                this.listaEventos.push({
+                    id : this.listaEventos.length +1, nombre : 'updated', timestamp : Date.now()
+                
+            })
+            doneUpdated = true
+            }
+        },
+        beforeDestroy(){
+            this.listaEventos.push({
+                id : this.listaEventos.length +1, nombre : 'beforeDestroy', timestamp : Date.now()
+            })
+            console.log('beforeDestroy')
+        },
+        destroyed(){
+            this.listaEventos.push({
+                id : this.listaEventos.length +1, nombre : 'destroyed', timestamp : Date.now()
+            })
         }
     });
 </script>
