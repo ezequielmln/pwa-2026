@@ -9,3 +9,19 @@ services:
       - "5432:5432"
     volumes:
       - ./data:/var/lib/postgresql/data:delegated
+  django:
+    image: pwa2026tp2:0.1
+    build:
+      context: ./config/django-image
+    volumes:
+      - ./backend:/usr/src/app:delegated
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      DB_HOST: ${DB_HOST}
+      DJANGO_SU_NAME: ${DJANGO_SU_NAME}
+      DJANGO_SU_EMAIL: ${DJANGO_SU_EMAIL}
+      DJANGO_SU_PASSWORD: ${DJANGO_SU_PASSWORD}
+    ports:
+      - "8000:8000"
