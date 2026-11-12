@@ -25,4 +25,18 @@ class Aula(models.Model):
     aforo = models.IntegerField(default=0)
     es_climatizada = models.BooleanField(default=False)
     
+class ReservaAula(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_aula = models.ForeignKey(Aula, on_delete=models.CASCADE)
+    fh_desde = models.DateTimeField(null=False)
+    fh_hasta = models.DateTimeField(null=False)
+    obversacion = models.CharField(max_length=256)
+
+class HorarioMateria(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_materia = models.ForeignKey(Materia, on_delete=models.CASCADE)
+    id_reserva = models.ForeignKey(ReservaAula, on_delete=models.CASCADE)
+    fh_desde = models.DateTimeField(null=False)
+    fh_hasta = models.DateTimeField(null=False)
+
     
